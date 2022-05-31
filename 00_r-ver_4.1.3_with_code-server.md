@@ -38,8 +38,8 @@ Gist ではディレクトリが使えないので、各インストールスク
 `docker image build` の際は Dockerfile と同じ階層の "my_scripts" というディレクトリに "install_\*.sh" と改名して格納しておく。改行コードが LF(UNIX) でないとエラーになるので注意。
 
 ```sh
-unzip {downloaded_this_gist}.zip
-cd {downloaded_this_gist}
+unzip {id_of_this_gist}.zip
+cd {id_of_this_gist}
 mkdir my_scripts
 find my_scripts* | sed -e 's%\(my_scripts__\(.*\)\)%mv \1 my_scripts\/\2%g' | sh
 ```
