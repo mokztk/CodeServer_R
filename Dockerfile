@@ -4,8 +4,10 @@
 FROM rocker/r-ver:4.1.3
 
 # Ubuntuミラーサイトの設定
-RUN sed -i.bak -e "s%http://[^ ]\+%http://ftp.udx.icscoe.jp/Linux/ubuntu/%g" /etc/apt/sources.list
 #RUN sed -i.bak -e 's%http://[^ ]\+%mirror://mirrors.ubuntu.com/mirrors.txt%g' /etc/apt/sources.list
+RUN if [ `uname -m` = "x86_64" ]; then \
+        sed -i.bak -e "s%http://[^ ]\+%http://ftp.udx.icscoe.jp/Linux/ubuntu/%g" /etc/apt/sources.list; \
+    fi
 
 # 日本語設定と必要なライブラリ（Rパッケージ用は別途スクリプト内で導入）
 RUN set -x \

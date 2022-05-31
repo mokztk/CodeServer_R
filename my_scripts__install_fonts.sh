@@ -67,7 +67,7 @@ patch -u /usr/lib/code-server/lib/vscode/out/vs/code/browser/workbench/workbench
 +			}
 +			@font-face {
 +				font-family: "UDEV Gothic LG";
-+				src: url("{{BASE}}/_static/src/browser/media/UDEVGothicLG-Itaclic.ttf") format("truetype");
++				src: url("{{BASE}}/_static/src/browser/media/UDEVGothicLG-Italic.ttf") format("truetype");
 +				font-weight: 400;
 +				font-style: italic;
 +			}
@@ -79,7 +79,7 @@ patch -u /usr/lib/code-server/lib/vscode/out/vs/code/browser/workbench/workbench
 +			}
 +			@font-face {
 +				font-family: "UDEV Gothic LG";
-+				src: url("{{BASE}}/_static/src/browser/media/UDEVGothicLG-BoldItaclic.ttf") format("truetype");
++				src: url("{{BASE}}/_static/src/browser/media/UDEVGothicLG-BoldItalic.ttf") format("truetype");
 +				font-weight: 700;
 +				font-style: italic;
 +			}

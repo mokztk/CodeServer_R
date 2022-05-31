@@ -13,7 +13,7 @@
     - RStudio のように Ctrl + Shift + m で `%>%` を入力できるように設定
 - Ubuntu mirror
     - <s>自動選択の `mirror://mirrors.ubuntu.com/mirrors.txt` に変更</s>
-    - 日本のミラーサーバーで一番回線が太い ICSCoE（IPA産業サイバーセキュリティセンター）に変更
+    - x86_64 の場合は日本のミラーサーバーで一番回線が太い ICSCoE（IPA産業サイバーセキュリティセンター）に変更
     - Ref: https://launchpad.net/ubuntu/+archivemirrors
 - 日本語ロケール
     - Ubuntu の `language-pack-ja`, `language-pack-ja-base`
