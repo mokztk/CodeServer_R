@@ -30,9 +30,9 @@
     - Python3 のインストールには `/rocker_scripts/install_python.sh` を使用
     - グローバルに pandas と matplotlib/seaborn を入れておく
 
-[rocker-org/rocker-versioned2](https://github.com/rocker-org/rocker-versioned2) のように、目的別のスクリプトを使って Dockerfile 自体は極力シンプルにしてみる。
-
 ---
+
+[rocker-org/rocker-versioned2](https://github.com/rocker-org/rocker-versioned2) のように、目的別のスクリプトを使って Dockerfile 自体は極力シンプルにしてみる。
 
 Gist ではディレクトリが使えないので、各インストールスクリプトは "my_scripts__\*" として保存してある。\
 `docker image build` の際は Dockerfile と同じ階層の "my_scripts" というディレクトリに "install_\*.sh" と改名して格納しておく。改行コードが LF(UNIX) でないとエラーになるので注意。
