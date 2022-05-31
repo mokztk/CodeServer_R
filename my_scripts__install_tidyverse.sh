@@ -45,11 +45,6 @@ wget -q https://github.com/jgm/pandoc/releases/download/2.17.1.1/${PANDOC_DLFILE
 gdebi -n $PANDOC_DLFILE
 rm $PANDOC_DLFILE
 
-#apt-get install -y --no-install-recommends \
-#    libpq5 \
-#    libpq-dev \
-#    default-libmysqlclient-dev
-
 apt-get clean
 rm -rf /var/lib/apt/lists/*
 
@@ -61,17 +56,3 @@ install2.r --error --ncpus -1 --skipinstalled \
     BiocManager \
     vroom \
     gert
-    
-## dplyr database backends
-#install2.r --error --skipmissing --skipinstalled --ncpus -1 \
-#    arrow \
-#    dbplyr \
-#    DBI \
-#    dtplyr \
-#    duckdb \
-#    nycflights13 \
-#    Lahman \
-#    RMariaDB \
-#    RPostgres \
-#    RSQLite \
-#    fst
