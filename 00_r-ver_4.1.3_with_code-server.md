@@ -1,16 +1,18 @@
-## About this image
+# About this image
 
 `r-ver:4.1.3` をベースに、UIとして code-server を導入したもの。ARM64 の環境でも使える解析環境を目指す。
 
 - **rocker/r-ver:4.1.3**
-    - CRAN repository は Public Rstudio Package Manager の 2022-04-21 に固定されている
+    - CRAN repository は Public Rstudio Package Manager の 2022-04-21 で固定されている
 - **code-server**
     - https://github.com/coder/code-server のインストールスクリプトを使用
-    - Extensions
+    - Extensions: 
         - R Extension for Visual Studio Code (Ikuyadeu.r)
-        - R LSP Client for VS Code (REditorSupport.r-lsp)
+        - R Debugger (RDebugger.r-debugger)
+        - <s>R LSP Client for VS Code (REditorSupport.r-lsp)</s> _2022-06-02 削除_
     - エディタフォントは [UDEV Gothic](https://github.com/yuru7/udev-gothic) （BIZ UD Gothic + JetBrains Mono）のリガチャ対応版を使用
     - RStudio のように Ctrl + Shift + m で `%>%` を入力できるように設定
+    - Plot は {httpgd} を使って表示するよう設定（`0.0.0.0:59531` を使用）
 - Ubuntu mirror
     - <s>自動選択の `mirror://mirrors.ubuntu.com/mirrors.txt` に変更</s>
     - x86_64 の場合は日本のミラーサーバーで一番回線が太い ICSCoE（IPA産業サイバーセキュリティセンター）に変更
@@ -42,4 +44,5 @@ unzip {id_of_this_gist}.zip
 cd {id_of_this_gist}
 mkdir my_scripts
 find my_scripts* | sed -e 's%\(my_scripts__\(.*\)\)%mv \1 my_scripts\/\2%g' | sh
+docker image build -t "mokztk/rcodeserver:4.1.3" .
 ```

@@ -53,4 +53,5 @@ ENV LANG=ja_JP.UTF-8 \
     TZ=Asia/Tokyo
 
 EXPOSE 8080
+EXPOSE 59531
 CMD /usr/bin/code-server /home/${DEFAULT_USER}

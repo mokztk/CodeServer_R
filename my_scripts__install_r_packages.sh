@@ -50,7 +50,8 @@ install2.r --error --ncpus -1 --skipinstalled \
     ftExtra \
     minidown \
     palmerpenguins \
-    svglite
+    svglite \
+    httpgd
 
 # install dev version of {export} from GitHub repo (commit 1afc8e2 / 2021-03-09)
 install2.r --error --ncpus -1 --skipinstalled \

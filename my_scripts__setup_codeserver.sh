@@ -4,7 +4,7 @@
 
 # 拡張機能の導入
 code-server --install-extension Ikuyadeu.r
-code-server --install-extension REditorSupport.r-lsp
+code-server --install-extension RDebugger.r-debugger
 
 # 設定ファイル
 cat << EOF > ~/.config/code-server/config.yaml
@@ -15,7 +15,10 @@ EOF
 
 cat << EOF > ~/.local/share/code-server/User/settings.json
 {
+    "r.rpath.linux": "/usr/local/bin/R",
     "r.rterm.linux": "/usr/local/bin/radian",
+    "r.bracketedPaste": true,
+    "r.plot.useHttpgd": true,
     "workbench.colorTheme": "Monokai",
     "files.autoSave": "off",
     "editor.fontFamily": "'UDEV Gothic LG'",
@@ -48,7 +51,6 @@ cat << EOF > ~/.local/share/code-server/User/keybindings.json
 EOF
 
 cat << EOF > ~/.radian_profile
-#options(radian.color_scheme = "monokai")
 options(radian.auto_match = TRUE)
 options(radian.highlight_matching_bracket = TRUE)
 options(radian.prompt = "\033[0;32mr$>\033[0m ")
@@ -57,4 +59,10 @@ options(radian.escape_key_map = list(
   list(key = "m", value = " %>% ")
 ))
 options(radian.force_reticulate_python = TRUE)
+EOF
+
+cat << EOF > ~/.Rprofile
+# httpgd settings
+options(httpgd.host = "0.0.0.0")
+options(httpgd.port = 59531)
 EOF
