@@ -1,4 +1,4 @@
-# About this image
+## About this image
 
 `r-ver:4.1.3` をベースに、UIとして code-server を導入したもの。ARM64 の環境でも使える解析環境を目指す。
 
