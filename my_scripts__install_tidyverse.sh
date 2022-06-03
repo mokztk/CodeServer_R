@@ -32,7 +32,7 @@ apt-get install -y --no-install-recommends \
     libssl-dev \
     libxml2-dev \
     libxtst6 \
-    libsqlite3-dev \
+    libsqlite3-dev
 
 # Pandoc は Ubuntu 20.04 LTS のものは ver.2.5 と古いので、新しいものをインストールする
 if [ `uname -m` = "aarch64" ]; then
