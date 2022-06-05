@@ -9,6 +9,7 @@ set -x
 # 依存ライブラリの追加
 apt-get update
 apt-get install -y --no-install-recommends \
+    cmake \
     file \
     gdebi-core \
     git \
