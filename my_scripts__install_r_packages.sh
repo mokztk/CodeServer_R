@@ -24,7 +24,7 @@ Rscript -e "update.packages(ask = FALSE)"
 
 # CRANパッケージをRSPMからインストール
 # --deps TRUE をつけると依存関係 Suggests までインストールされ膨大になる
-install2.r --error --ncpus -1 --skipinstalled \
+install2.r --error --skipinstalled \
     pacman \
     here \
     tidylog \
@@ -54,7 +54,7 @@ install2.r --error --ncpus -1 --skipinstalled \
     httpgd
 
 # install dev version of {export} from GitHub repo (commit 1afc8e2 / 2021-03-09)
-install2.r --error --ncpus -1 --skipinstalled \
+install2.r --error --skipinstalled \
     officer \
     rvg \
     openxlsx \

@@ -49,7 +49,7 @@ apt-get clean
 rm -rf /var/lib/apt/lists/*
 
 # R packages
-install2.r --error --ncpus -1 --skipinstalled \
+install2.r --error --skipinstalled \
     tidyverse \
     devtools \
     rmarkdown \

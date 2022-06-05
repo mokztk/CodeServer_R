@@ -27,6 +27,7 @@
     - `rocker/tidyverse` に導入されているものから、容量の大きな database backend を省略したもの
     - 関連して必要となる Pandoc は、Ubuntu 20.04LTS のものはバージョンが古いので公式サイトの deb を使用
     - 個人的な頻用パッケージも追加しておく
+    - `install2.r --ncpus -1 ...` で並列化すると、ARM64でうまくいかない場合があった(big.LITTLE構成のため？）ので `--ncpus` 指定を削除
 - [radian: A 21 century R console](https://github.com/randy3k/radian)
 - Python
     - Python3 のインストールには `/rocker_scripts/install_python.sh` を使用
