@@ -28,6 +28,7 @@ cat << EOF > ~/.local/share/code-server/User/settings.json
     "editor.fontSize": 16,
     "terminal.integrated.fontSize": 16,
     "editor.tabSize": 2,
+    "editor.wordWrap": "on",
     "editor.guides.indentation": false,
     "indentRainbow.colors": [
         "rgba(59,82,139,0.2)",
