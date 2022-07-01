@@ -1,15 +1,16 @@
 ## About this image
 
-`r-ver:4.1.3` をベースに、UIとして code-server を導入したもの。ARM64 の環境でも使える解析環境を目指す。
+`rocker/r-ver` をベースに、UIとして code-server を導入したもの。ARM64 の環境でも使える解析環境を目指す。
 
-- **rocker/r-ver:4.1.3**
+- **rocker/r-ver:4.2.0**
     - CRAN repository は Public Rstudio Package Manager の 2022-04-21 で固定されている
 - **code-server**
     - https://github.com/coder/code-server のインストールスクリプトを使用
     - Extensions: 
         - R Extension for Visual Studio Code (Ikuyadeu.r)
         - R Debugger (RDebugger.r-debugger)
-        - <s>R LSP Client for VS Code (REditorSupport.r-lsp)</s> _2022-06-02 削除_
+        - indent-rainbow (oderwat.indent-rainbow)
+        - GitHub Theme (GitHub.github-vscode-theme)
     - エディタフォントは [UDEV Gothic](https://github.com/yuru7/udev-gothic) （BIZ UD Gothic + JetBrains Mono）のリガチャ対応版を使用
     - RStudio のように Ctrl + Shift + m で `%>%` を入力できるように設定
     - Plot は {httpgd} を使って表示するよう設定（`0.0.0.0:59531` を使用）
@@ -33,6 +34,11 @@
     - Python3 のインストールには `/rocker_scripts/install_python.sh` を使用
     - グローバルに pandas と matplotlib/seaborn を入れておく
 
----
+[rocker-org/rocker-versioned2](https://github.com/rocker-org/rocker-versioned2) のように、目的別のスクリプトを使って Dockerfile 自体は極力シンプルに。
 
-[rocker-org/rocker-versioned2](https://github.com/rocker-org/rocker-versioned2) のように、目的別のスクリプトを使って Dockerfile 自体は極力シンプルにしてみる。
+## History
+
+- **2022-06-06** :bookmark:[4.1.3_2022Jun](https://github.com/mokztk/CodeServer_R/releases/tag/4.1.3_2022Jun) : `rocker/r-ver:4.1.3` 対応版 (Gist)
+- **2022-07-01** [Gist: mokztk/00_r-ver_4.1.3_with_code-server.md](https://gist.github.com/mokztk/37f6806e0d8734a500ab1ff766eff53b) から改めてレポジトリとして編集を開始
+- **2022-07-01** :bookmark:[4.2.0_2022Jul](https://github.com/mokztk/CodeServer_R/releases/tag/4.2.0_2022Jul) : `rocker/r-ver:4.2.0` 対応版
+
