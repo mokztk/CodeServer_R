@@ -66,5 +66,11 @@ install2.r --error --skipinstalled \
 
 installGithub.r tomwenseleers/export@1afc8e2
 
-# cleaning
-rm /tmp/downloaded_packages/*
+
+# Clean up
+# Ref: https://github.com/rocker-org/rocker-versioned2/commit/75dd95c6cee7da29ceed363b9fe4823a12f575f8
+rm -rf /tmp/downloaded_packages
+
+## Strip binary installed libraries from RSPM
+## https://github.com/rocker-org/rocker-versioned2/issues/340
+strip /usr/local/lib/R/site-library/*/libs/*.so
