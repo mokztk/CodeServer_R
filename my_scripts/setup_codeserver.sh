@@ -5,6 +5,8 @@
 # 拡張機能の導入
 code-server --install-extension Ikuyadeu.r
 code-server --install-extension RDebugger.r-debugger
+code-server --install-extension oderwat.indent-rainbow
+code-server --install-extension GitHub.github-vscode-theme
 
 # 設定ファイル
 cat << EOF > ~/.config/code-server/config.yaml
@@ -19,13 +21,20 @@ cat << EOF > ~/.local/share/code-server/User/settings.json
     "r.rterm.linux": "/usr/local/bin/radian",
     "r.bracketedPaste": true,
     "r.plot.useHttpgd": true,
-    "workbench.colorTheme": "Monokai",
+    "workbench.colorTheme": "GitHub Dark Default",
     "files.autoSave": "off",
     "editor.fontFamily": "'UDEV Gothic LG'",
     "editor.fontLigatures": true,
     "editor.fontSize": 16,
     "terminal.integrated.fontSize": 16,
-    "editor.tabSize": 2
+    "editor.tabSize": 2,
+    "editor.guides.indentation": false,
+    "indentRainbow.colors": [
+        "rgba(59,82,139,0.2)",
+        "rgba(33,144,140,0.2)",
+        "rgba(93,200,99,0.2)",
+        "rgba(253,231,37,0.2)"
+    ]
 }
 EOF
 
