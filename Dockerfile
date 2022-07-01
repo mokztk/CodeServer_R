@@ -1,7 +1,8 @@
-# rocker/r-ver:4.1.3 に Radian + Code-server と頻用パッケージを追加する
-#   CRAN snapshot: https://packagemanager.rstudio.com/cran/__linux__/focal/2022-04-21
+# rocker/r-ver:4.2.0 に Radian + Code-server と頻用パッケージを追加する
+#   ENV CRAN=https://packagemanager.rstudio.com/cran/__linux__/focal/2022-06-22
 
-FROM rocker/r-ver:4.1.3
+FROM rocker/r-ver:4.2.0
+#FROM rocker/r-ver@sha256:0ce6e55560d66912e4b06e933d91701e6296e36894426bce30ed7978e5c3a708
 
 # Ubuntuミラーサイトの設定
 #RUN sed -i.bak -e 's%http://[^ ]\+%mirror://mirrors.ubuntu.com/mirrors.txt%g' /etc/apt/sources.list
