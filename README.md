@@ -3,7 +3,7 @@
 `rocker/r-ver` をベースに、UIとして code-server を導入したもの。ARM64 の環境でも使える解析環境を目指す。
 
 - **rocker/r-ver:4.2.0**
-    - CRAN repository は Public Rstudio Package Manager の 2022-04-21 で固定されている
+    - CRAN repository は Public Rstudio Package Manager の 2022-06-22 で固定されている
 - **code-server**
     - https://github.com/coder/code-server のインストールスクリプトを使用
     - Extensions: 
