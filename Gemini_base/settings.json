@@ -1,0 +1,22 @@
+{
+    "r.plot.view": "httpgd",
+    "r.rterm.linux": "/usr/local/bin/radian",
+    "r.bracketedPaste": true,
+    "r.rconsole.useExternalTerminal": false
+    "r.lsp.enabled": true,
+    "[r]": {
+        "editor.defaultFormatter": "posit.air-vscode",
+        "editor.formatOnSave": true,
+        "editor.wordBasedSuggestions": "off"
+    },
+    "[quarto]": {
+        "editor.defaultFormatter": "quarto.quarto",
+        "editor.formatOnSave": true
+    },
+    "air.linting.enabled": true,
+    "air.linting.onType": true,
+    "quarto.path": "/usr/local/bin/quarto",
+    "editor.fontFamily": "'Fira Code', 'Noto Sans JP', monospace",
+    "editor.fontLigatures": true,
+    "workbench.colorTheme": "Default Dark Modern"
+}

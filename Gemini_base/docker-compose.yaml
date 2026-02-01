@@ -1,0 +1,21 @@
+version: '3.8'
+services:
+  r-ide:
+    build: .
+    container_name: r-analysis-env
+    init: true  # プロセス管理を Docker に任せる
+    ports:
+      - "8080:8080"
+      - "8081:8081"
+    volumes:
+      - ~/work/project:/workspace
+      - ~/work/settings.json:/home/coder/.local/share/code-server/User/settings.json
+    environment:
+      - PASSWORD=your_password
+      - TZ=Asia/Tokyo
+    # メモリ制限（任意）: Chromebook のリソースを保護したい場合
+    # deploy:
+    #   resources:
+    #     limits:
+    #       memory: 4G
+    restart: unless-stopped
