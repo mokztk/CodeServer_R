@@ -17,6 +17,7 @@ RUN --mount=type=cache,target=/var/lib/apt,sharing=locked \
         ca-certificates \
         git \
         language-pack-ja-base \
+        fonts-noto-cjk \
     && /usr/sbin/update-locale LANG=ja_JP.UTF-8 LANGUAGE="ja_JP:ja" \
     && /bin/bash -c "source /etc/default/locale" \
     && ln -sf /usr/share/zoneinfo/Asia/Tokyo /etc/localtime \
@@ -26,10 +27,8 @@ RUN --mount=type=cache,target=/var/lib/apt,sharing=locked \
 # code-server
 RUN curl -fsSL https://code-server.dev/install.sh | sh
 
-# uv (Python manager) + radian
-COPY --from=ghcr.io/astral-sh/uv:0.9.6 /uv /uvx /bin/
-RUN uv python install 3.12 \
-    && uv tool install radian
+# uv (Python manager)
+COPY --from=ghcr.io/astral-sh/uv:0.9.8 /uv /uvx /bin/
 
 # Quarto CLI
 RUN --mount=type=cache,target=/var/lib/apt,sharing=locked \
@@ -72,6 +71,10 @@ RUN code-server --install-extension REditorSupport.r \
         'cert: false' \
         > /home/coder/.config/code-server/config.yaml
 
+# radian
+RUN uv venv --python 3.12.12 /home/coder/.venv \
+    && export PATH=/home/coder/.venv/bin:$PATH \
+    && uv pip install radian
 
 WORKDIR /workspace
 

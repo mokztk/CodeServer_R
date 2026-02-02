@@ -1,0 +1,11 @@
+services:
+  code_server:
+    image: "mokztk/r_codeserver:4.5.1"
+    container_name: "codeserver"
+    ports:
+      - "8080:8080"
+      - "8088:8088"
+    environment:
+      - AUTH=none
+    entrypoint: >
+      code-server --bind-addr 0.0.0.0:8080 /workspace
