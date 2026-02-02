@@ -65,11 +65,8 @@ RUN code-server --install-extension REditorSupport.r \
     && code-server --install-extension Google.geminicodeassist \
     && code-server --install-extension quarto.quarto \
     && mkdir -p /home/coder/.config/code-server \
-    && printf '%s\n' \
-        'bind-addr: 0.0.0.0:8080' \
-        'auth: none' \
-        'cert: false' \
-        > /home/coder/.config/code-server/config.yaml
+    && touch /home/coder/.local/share/code-server/User/settings.json \
+    && echo 'options(device = "httpgd", httpgd.host = "0.0.0.0", httpgd.port = 8088, httpgd.token = "")' > /home/coder/.Rprofile
 
 # radian
 RUN uv venv --python 3.12.12 /home/coder/.venv \
@@ -78,6 +75,6 @@ RUN uv venv --python 3.12.12 /home/coder/.venv \
 
 WORKDIR /workspace
 
-EXPOSE 8080 4190
+EXPOSE 8080 8088
 
-CMD ["code-server"]
+CMD ["code-server", "--auth", "none", "--bind-addr", "0.0.0.0:8080", "/workspace"]

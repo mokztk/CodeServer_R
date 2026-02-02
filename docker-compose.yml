@@ -1,5 +1,8 @@
 services:
   code_server:
+    build:
+      context: .
+      dockerfile: Dockerfile
     image: "mokztk/r_codeserver:4.5.1"
     container_name: "codeserver"
     ports:
@@ -7,5 +10,5 @@ services:
       - "8088:8088"
     environment:
       - AUTH=none
-    entrypoint: >
-      code-server --bind-addr 0.0.0.0:8080 /workspace
+    volumes:
+      - ./settings.json:/home/coder/.local/share/code-server/User/settings.json
