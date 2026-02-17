@@ -8,7 +8,5 @@ services:
     ports:
       - "8080:8080"
       - "8088:8088"
-    environment:
-      - AUTH=none
     volumes:
       - ./settings.json:/home/coder/.local/share/code-server/User/settings.json

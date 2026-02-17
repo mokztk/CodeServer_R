@@ -50,7 +50,7 @@ RUN --mount=type=cache,target=/var/lib/apt,sharing=locked \
     && Rscript -e "pak::pkg_install(c( \
         'languageserver', \
         'tidyverse', \
-        'nx10/httpgd' \
+        'nx10/httpgd@dd6ed3a' \
         ))"
 
 # coder user (passwordless sudo)
@@ -71,10 +71,19 @@ RUN code-server --install-extension REditorSupport.r \
 # radian
 RUN uv venv --python 3.12.12 /home/coder/.venv \
     && export PATH=/home/coder/.venv/bin:$PATH \
+    && echo 'source /home/coder/.venv/bin/activate' >> /home/coder/.bashrc \
     && uv pip install radian
+
+# R user library
+RUN Rscript -e 'dir.create(Sys.getenv("R_LIBS_USER"), recursive = TRUE)' \
+    && echo '.libPaths(c(Sys.getenv("R_LIBS_USER"), .Library.site, .Library))' >> /home/coder/.Rprofile
 
 WORKDIR /workspace
 
 EXPOSE 8080 8088
+
+ENV TZ=Asia/Tokyo \
+    LANG=ja_JP.UTF-8 \
+    LC_ALL=ja_JP.UTF-8
 
 CMD ["code-server", "--auth", "none", "--bind-addr", "0.0.0.0:8080", "/workspace"]
