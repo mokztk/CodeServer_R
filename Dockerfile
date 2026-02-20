@@ -45,8 +45,6 @@ RUN --mount=type=cache,target=/var/lib/apt,sharing=locked \
 # pak + R packages (sysreqs handled by pak)
 RUN --mount=type=cache,target=/var/lib/apt,sharing=locked \
     --mount=type=cache,target=/var/cache/apt,sharing=locked \
-    --mount=type=cache,target=/root/.cache/R,sharing=locked \
-    --mount=type=cache,target=/tmp,sharing=locked \
     Rscript -e "install.packages('pak')" \
     && Rscript -e "pak::pkg_install(c( \
         'languageserver', \
