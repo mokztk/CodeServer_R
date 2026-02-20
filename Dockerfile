@@ -28,7 +28,7 @@ RUN --mount=type=cache,target=/var/lib/apt,sharing=locked \
 RUN curl -fsSL https://code-server.dev/install.sh | sh
 
 # uv (Python manager)
-COPY --from=ghcr.io/astral-sh/uv:0.9.8 /uv /uvx /opt/uv/bin
+COPY --from=ghcr.io/astral-sh/uv:0.9.8 /uv /uvx /opt/uv/bin/
 
 # Quarto CLI
 RUN --mount=type=cache,target=/var/lib/apt,sharing=locked \
@@ -53,6 +53,11 @@ RUN --mount=type=cache,target=/var/lib/apt,sharing=locked \
         'nx10/httpgd@dd6ed3a' \
         ))"
 
+# radian
+RUN /opt/uv/bin/uv venv --python 3.12.12 /opt/venv \
+    && export PATH=/opt/venv/bin:/opt/uv/bin:$PATH \
+    && uv pip install radian
+
 # coder user (passwordless sudo)
 RUN useradd -m -s /bin/bash coder \
  && echo "coder ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/coder \
@@ -67,11 +72,6 @@ RUN code-server --install-extension REditorSupport.r \
     && mkdir -p /home/coder/.config/code-server \
     && touch /home/coder/.local/share/code-server/User/settings.json \
     && echo 'options(device = "httpgd", httpgd.host = "0.0.0.0", httpgd.port = 8088, httpgd.token = "")' > /home/coder/.Rprofile
-
-# radian
-RUN /opt/uv/bin/uv venv --python 3.12.12 /opt/venv \
-    && export PATH=/opt/venv/bin:/opt/uv/bin:$PATH \
-    && uv pip install radian
 
 # R user library
 RUN Rscript -e 'dir.create(Sys.getenv("R_LIBS_USER"), recursive = TRUE)' \
