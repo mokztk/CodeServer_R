@@ -53,8 +53,11 @@ RUN --mount=type=cache,target=/var/lib/apt,sharing=locked \
         ))"
 
 # radian
+ENV UV_PYTHON_INSTALL_DIR=/opt/uv/python \
+    PATH=/opt/venv/bin:/opt/uv/bin:$PATH
+
 RUN /opt/uv/bin/uv venv --python 3.12.12 /opt/venv \
-    && export PATH=/opt/venv/bin:/opt/uv/bin:$PATH \
+    && chmod -R a+rX /opt \
     && uv pip install radian
 
 # coder user (passwordless sudo)
