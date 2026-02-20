@@ -34,7 +34,7 @@ COPY --from=ghcr.io/astral-sh/uv:0.9.8 /uv /uvx /opt/uv/bin/
 # rocker/rstudio:4.5.1 と同じバージョンを指定して、rocker公式のインストールスクリプトで導入
 # wget, ca-certicifates は導入済みのため apt の処理はスキップ（行番号は @07c155e 準拠）
 
-ENV PANDOC_VERSION="3.8.2.1" \
+ARG PANDOC_VERSION="3.8.2.1" \
     QUARTO_VERSION="1.7.32"
 
 RUN --mount=type=cache,target=/var/lib/apt,sharing=locked \
@@ -50,7 +50,8 @@ RUN --mount=type=cache,target=/var/lib/apt,sharing=locked \
         'languageserver', \
         'tidyverse', \
         'nx10/httpgd@dd6ed3a' \
-        ))"
+        ))" \
+    && rm -rf /tmp/Rtmp*
 
 # radian
 ENV UV_PYTHON_INSTALL_DIR=/opt/uv/python \
@@ -85,7 +86,6 @@ EXPOSE 8080 8088
 
 ENV TZ=Asia/Tokyo \
     LANG=ja_JP.UTF-8 \
-    LC_ALL=ja_JP.UTF-8 \
-    PATH=/opt/venv/bin:/opt/uv/bin:$PATH
+    LC_ALL=ja_JP.UTF-8
 
 CMD ["code-server", "--auth", "none", "--bind-addr", "0.0.0.0:8080", "/workspace"]
