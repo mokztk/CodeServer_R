@@ -28,7 +28,7 @@ RUN --mount=type=cache,target=/var/lib/apt,sharing=locked \
 RUN curl -fsSL https://code-server.dev/install.sh | sh
 
 # uv (Python manager)
-COPY --from=ghcr.io/astral-sh/uv:0.9.8 /uv /uvx /bin/
+COPY --from=ghcr.io/astral-sh/uv:0.9.8 /uv /uvx /opt/uv/bin
 
 # Quarto CLI
 RUN --mount=type=cache,target=/var/lib/apt,sharing=locked \
@@ -69,9 +69,8 @@ RUN code-server --install-extension REditorSupport.r \
     && echo 'options(device = "httpgd", httpgd.host = "0.0.0.0", httpgd.port = 8088, httpgd.token = "")' > /home/coder/.Rprofile
 
 # radian
-RUN uv venv --python 3.12.12 /home/coder/.venv \
-    && export PATH=/home/coder/.venv/bin:$PATH \
-    && echo 'source /home/coder/.venv/bin/activate' >> /home/coder/.bashrc \
+RUN /opt/uv/bin/uv venv --python 3.12.12 /opt/venv \
+    && export PATH=/opt/venv/bin:/opt/uv/bin:$PATH \
     && uv pip install radian
 
 # R user library
@@ -84,6 +83,7 @@ EXPOSE 8080 8088
 
 ENV TZ=Asia/Tokyo \
     LANG=ja_JP.UTF-8 \
-    LC_ALL=ja_JP.UTF-8
+    LC_ALL=ja_JP.UTF-8 \
+    PATH=/opt/venv/bin:/opt/uv/bin:$PATH
 
 CMD ["code-server", "--auth", "none", "--bind-addr", "0.0.0.0:8080", "/workspace"]
