@@ -31,15 +31,16 @@ RUN curl -fsSL https://code-server.dev/install.sh | sh
 COPY --from=ghcr.io/astral-sh/uv:0.9.8 /uv /uvx /opt/uv/bin/
 
 # Quarto CLI
+# rocker/rstudio:4.5.1 と同じバージョンを指定して、rocker公式のインストールスクリプトで導入
+# wget, ca-certicifates は導入済みのため apt の処理はスキップ（行番号は @07c155e 準拠）
+
+ENV PANDOC_VERSION="3.8.2.1" \
+    QUARTO_VERSION="1.7.32"
+
 RUN --mount=type=cache,target=/var/lib/apt,sharing=locked \
     --mount=type=cache,target=/var/cache/apt,sharing=locked \
-    --mount=type=cache,target=/root/.cache/R,sharing=locked \
-    --mount=type=cache,target=/tmp,sharing=locked \
-    curl -fsSL https://quarto.org/download/latest/quarto-linux-amd64.deb \
-        -o /tmp/quarto.deb \
-    && apt-get update \
-    && apt-get install -y /tmp/quarto.deb \
-    && rm /tmp/quarto.deb
+    sed -e "16,26d" /rocker_scripts/install_pandoc.sh | bash \
+    && sed -e "21,31d" /rocker_scripts/install_quarto.sh | bash
 
 # pak + R packages (sysreqs handled by pak)
 RUN --mount=type=cache,target=/var/lib/apt,sharing=locked \
