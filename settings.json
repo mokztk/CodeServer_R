@@ -19,5 +19,6 @@
     "editor.minimap.enabled": false,
     "workbench.colorTheme": "Visual Studio Light",
     "remote.autoForwardPortsSource": "hybrid",
-    "editor.tabSize": 2
+    "editor.tabSize": 2,
+    "files.autoSave": "off"
 }
