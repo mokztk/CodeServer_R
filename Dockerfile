@@ -17,18 +17,19 @@ RUN --mount=type=cache,target=/var/lib/apt,sharing=locked \
         ca-certificates \
         git \
         language-pack-ja-base \
-        fonts-noto-cjk \
     && /usr/sbin/update-locale LANG=ja_JP.UTF-8 LANGUAGE="ja_JP:ja" \
     && /bin/bash -c "source /etc/default/locale" \
     && ln -sf /usr/share/zoneinfo/Asia/Tokyo /etc/localtime \
     && apt-get clean \
     && mkdir -p /etc/R
 
+# coder user (passwordless sudo)
+RUN useradd -m -s /bin/bash coder \
+ && echo "coder ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/coder \
+ && chmod 0440 /etc/sudoers.d/coder
+
 # code-server
 RUN curl -fsSL https://code-server.dev/install.sh | sh
-
-# uv (Python manager)
-COPY --from=ghcr.io/astral-sh/uv:0.9.8 /uv /uvx /opt/uv/bin/
 
 # Quarto CLI
 # rocker/rstudio:4.5.1 と同じバージョンを指定して、rocker公式のインストールスクリプトで導入
@@ -42,18 +43,9 @@ RUN --mount=type=cache,target=/var/lib/apt,sharing=locked \
     sed -e "16,26d" /rocker_scripts/install_pandoc.sh | bash \
     && sed -e "21,31d" /rocker_scripts/install_quarto.sh | bash
 
-# pak + R packages (sysreqs handled by pak)
-RUN --mount=type=cache,target=/var/lib/apt,sharing=locked \
-    --mount=type=cache,target=/var/cache/apt,sharing=locked \
-    Rscript -e "install.packages('pak')" \
-    && Rscript -e "pak::pkg_install(c( \
-        'languageserver', \
-        'tidyverse', \
-        'nx10/httpgd@dd6ed3a' \
-        ))" \
-    && rm -rf /tmp/Rtmp*
+# uv (Python manager) & radian
+COPY --from=ghcr.io/astral-sh/uv:0.9.8 /uv /uvx /opt/uv/bin/
 
-# radian
 ENV UV_PYTHON_INSTALL_DIR=/opt/uv/python \
     PATH=/opt/venv/bin:/opt/uv/bin:$PATH
 
@@ -61,10 +53,29 @@ RUN /opt/uv/bin/uv venv --python 3.12.12 /opt/venv \
     && chmod -R a+rX /opt \
     && uv pip install radian
 
-# coder user (passwordless sudo)
-RUN useradd -m -s /bin/bash coder \
- && echo "coder ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/coder \
- && chmod 0440 /etc/sudoers.d/coder
+# Node.js / npm / pnpm
+# 公式の npm 不要のインストールスクリプトで 2025-10-30 時点の Active LTS = v24系をインストール
+RUN wget -qO- https://raw.githubusercontent.com/tj/n/master/bin/n | bash -s install v24 \
+    && npm install -g pnpm
+
+# Microsoft Edit
+RUN wget -O /tmp/msedit.tar.zst \
+        https://github.com/microsoft/edit/releases/download/v1.2.0/edit-1.2.0-`uname -m`-linux-gnu.tar.zst \
+    && cd /tmp \
+    && tar -Izstd -xvf msedit.tar.zst \
+    && mv edit /usr/local/bin/msedit \
+    && rm msedit.tar.zst
+
+# mokztk/RStudio_docker から流用した setup script
+# 各スクリプトは改行コード LF(UNIX) でないとエラーになる
+COPY my_scripts /my_scripts
+
+RUN --mount=type=cache,target=/var/lib/apt,sharing=locked \
+    --mount=type=cache,target=/var/cache/apt,sharing=locked \
+    --mount=type=cache,target=/root/.cache/R,sharing=locked \
+    chmod 775 my_scripts/* \
+    && bash /my_scripts/install_r_packages_pak.sh \
+    && bash /my_scripts/install_notojp.sh
 
 # VS Code extensions & config
 USER coder
