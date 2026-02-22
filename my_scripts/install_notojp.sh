@@ -28,6 +28,6 @@ fc-cache -fv
 # Noto Sans/Serif CJK JP を Noto Sans/Serif JP の別名として登録しておく（過去のコードの文字化け回避）
 # 設定しておけば、最低限グラフの文字化けはなくなる
 
-mkdir -p /home/rstudio/.config/fontconfig
-cp /my_scripts/fonts.conf /home/rstudio/.config/fontconfig/
-chown -R rstudio:rstudio /home/rstudio/.config
+mkdir -p /home/coder/.config/fontconfig
+cp /my_scripts/fonts.conf /home/coder/.config/fontconfig/
+chown -R coder:coder /home/coder/.config

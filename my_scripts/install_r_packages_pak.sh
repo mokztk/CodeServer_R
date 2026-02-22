@@ -2,13 +2,6 @@
 
 # R パッケージのインストール
 
-apt-get update
-
-# base の tcltk パッケージのために Tcl/Tk を入れておく
-apt-get install -y --no-install-recommends \
-    libtcl8.6 \
-    libtk8.6
-
 # まず最新の状態まで更新する
 Rscript -e "update.packages(ask = FALSE)"
 
@@ -29,6 +22,12 @@ function pak_pak() {
     done
     Rscript -e "pak::pak(c(${pkgs}))"
 }
+
+# code-server で使うもの
+
+pak_pak \
+    languageserver \
+    nx10/httpgd@dd6ed3a
 
 # rocker/tidyverse 相当のパッケージ
 # 容量の大きな database backend は RSQLite 以外省略（行番号は @5d33fd1 準拠）
@@ -87,16 +86,17 @@ pak_pak \
     tinytable \
     RcppEigen \
     cpp11 \
-    plogr
+    plogr \
+    reticulate
 
 # R.cache (imported by styler) で使用するキャッシュディレクトリを準備
-mkdir -p /home/rstudio/.cache/R/R.cache
-chown -R rstudio:rstudio /home/rstudio/.cache
+mkdir -p /home/coder/.cache/R/R.cache
+chown -R coder:coder /home/coder/.cache
 
 # Clean up
 Rscript -e "pak::pak_cleanup(force = TRUE)"
-#rm -rf /tmp/downloaded_packages
-#rm -rf /tmp/Rtmp*
+rm -rf /tmp/downloaded_packages
+rm -rf /tmp/Rtmp*
 strip /usr/local/lib/R/site-library/*/libs/*.so
 
 apt-get clean
