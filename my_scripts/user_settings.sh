@@ -104,6 +104,6 @@ EOF
 
 # 安全のため、リリース後1週間以上経ったパッケージのみインストールできるようにする
 
-pnpm setup
+SHELL=/usr/bin/bash pnpm setup
 pnpm config set --location=global minimumReleaseAge 10080
 
