@@ -59,11 +59,14 @@ RUN wget -qO- https://raw.githubusercontent.com/tj/n/master/bin/n | bash -s inst
     && npm install -g pnpm
 
 # Microsoft Edit
-RUN wget -O /tmp/msedit.tar.zst \
+RUN mkdir -p /opt/msedit/ \
+    && wget -O /opt/msedit/msedit.tar.zst \
         https://github.com/microsoft/edit/releases/download/v1.2.0/edit-1.2.0-`uname -m`-linux-gnu.tar.zst \
-    && cd /tmp \
+    && cd /opt/msedit \
     && tar -Izstd -xvf msedit.tar.zst \
-    && mv edit /usr/local/bin/msedit \
+    && mkdir -p /home/coder/.local/bin \
+    && chown -R coder:coder /home/coder/.local/ \ 
+    && ln -s /opt/msedit/edit /home/coder/.local/bin/msedit \
     && rm msedit.tar.zst
 
 # mokztk/RStudio_docker から流用した setup script
