@@ -77,19 +77,9 @@ RUN --mount=type=cache,target=/var/lib/apt,sharing=locked \
     && bash /my_scripts/install_r_packages_pak.sh \
     && bash /my_scripts/install_notojp.sh
 
-# VS Code extensions & config
+# ユーザー設定
 USER coder
-RUN code-server --install-extension REditorSupport.r \
-    && code-server --install-extension posit.air-vscode \
-    && code-server --install-extension Google.geminicodeassist \
-    && code-server --install-extension quarto.quarto \
-    && mkdir -p /home/coder/.config/code-server \
-    && touch /home/coder/.local/share/code-server/User/settings.json \
-    && echo 'options(device = "httpgd", httpgd.host = "0.0.0.0", httpgd.port = 8088, httpgd.token = "")' > /home/coder/.Rprofile
-
-# R user library
-RUN Rscript -e 'dir.create(Sys.getenv("R_LIBS_USER"), recursive = TRUE)' \
-    && echo '.libPaths(c(Sys.getenv("R_LIBS_USER"), .Library.site, .Library))' >> /home/coder/.Rprofile
+RUN bash /my_scripts/user_settings.sh
 
 WORKDIR /workspace
 
