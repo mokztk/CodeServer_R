@@ -99,5 +99,5 @@ rm -rf /tmp/downloaded_packages
 rm -rf /tmp/Rtmp*
 strip /usr/local/lib/R/site-library/*/libs/*.so
 
-apt-get clean
+#apt-get clean
 rm -rf /var/lib/apt/lists/*
