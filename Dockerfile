@@ -42,9 +42,8 @@ ARG PANDOC_VERSION="3.8.2.1" \
     QUARTO_VERSION="1.7.32"
 
 RUN --mount=type=cache,id=apt-cache-${TARGETARCH},target=/var/cache/apt \
-    sed -e "16,26d" -e "85d" /rocker_scripts/install_pandoc.sh | bash \
-    && sed -e "21,31d" -e "74d" /rocker_scripts/install_quarto.sh | bash \
-    && rm -rf /var/lib/apt/lists/*
+    sed -e "16,26d" /rocker_scripts/install_pandoc.sh | bash \
+    && sed -e "21,31d" /rocker_scripts/install_quarto.sh | bash
 
 # uv (Python manager) & radian
 COPY --from=ghcr.io/astral-sh/uv:0.9.8 /uv /uvx /opt/uv/bin/
@@ -78,8 +77,7 @@ COPY --chmod=755 my_scripts /my_scripts
 
 RUN --mount=type=cache,id=apt-cache-${TARGETARCH},target=/var/cache/apt \
     bash /my_scripts/install_r_packages_pak.sh \
-    && bash /my_scripts/install_notojp.sh \
-    && rm -rf /var/lib/apt/lists/*
+    && bash /my_scripts/install_notojp.sh
 
 # ユーザー設定
 USER coder
