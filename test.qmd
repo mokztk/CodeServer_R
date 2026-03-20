@@ -2,11 +2,28 @@
 title: "Test Document"
 date: "`r Sys.Date()`"
 date-format: iso
-format: html
+format:
+  html: 
+    fontsize: normal
+    page-layout: full
+    fig-format: svg
+    fig-dev: svglite
+    fig-width: 9
+    fig-height: 5.625   # 8:5
+    self-contained: true
+    code-fold: show
+    code-block-border-left: true
+    code-line-numbers: false
+    code-overflow: wrap
+    highlight-style: atom-one
+    df-print: tibble
 ---
 
 ```{r}
+#| message: false
+
 pacman::p_load(tidyverse)
+pacman::p_install("hexbin", force = FALSE)
 
 diamonds |> 
   ggplot(aes(x = carat, y = price, fill = clarity)) +

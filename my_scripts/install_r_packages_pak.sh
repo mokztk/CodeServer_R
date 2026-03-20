@@ -27,7 +27,7 @@ function pak_pak() {
 
 pak_pak \
     languageserver \
-    nx10/httpgd@dd6ed3a
+    httpgd
 
 # rocker/tidyverse 相当のパッケージ
 # 容量の大きな database backend は RSQLite 以外省略（行番号は @5d33fd1 準拠）
@@ -86,7 +86,9 @@ pak_pak \
     tinytable \
     RcppEigen \
     cpp11 \
-    plogr \
+    RcppArmadillo \
+    formatR \
+    hexbin \
     reticulate
 
 # R.cache (imported by styler) で使用するキャッシュディレクトリを準備
@@ -99,5 +101,5 @@ rm -rf /tmp/downloaded_packages
 rm -rf /tmp/Rtmp*
 strip /usr/local/lib/R/site-library/*/libs/*.so
 
-apt-get clean
-#rm -rf /var/lib/apt/lists/*
+#apt-get clean
+rm -rf /var/lib/apt/lists/*

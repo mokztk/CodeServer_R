@@ -1,13 +1,16 @@
 # rocker/r-ver に code-server を追加する
 
-FROM rocker/r-ver:4.5.1
+ARG BUILDKIT_INLINE_CACHE=1
+ARG TARGETPLATFORM
 
+FROM --platform=$TARGETPLATFORM rocker/r-ver:4.5.2
+
+ARG TARGETARCH
 ENV DEBIAN_FRONTEND=noninteractive
 
 # 日本語設定と必要なライブラリ（Rパッケージ用は別途スクリプト内で導入）
 # 以降も何度か apt-get を使うので BuildKit のキャッシュマウント機能を使う
-RUN --mount=type=cache,target=/var/lib/apt,sharing=locked \
-    --mount=type=cache,target=/var/cache/apt,sharing=locked \
+RUN --mount=type=cache,id=apt-cache-${TARGETARCH},target=/var/cache/apt \
     apt-get update \
     && apt-get install -y --no-install-recommends \
         sudo \
@@ -20,7 +23,7 @@ RUN --mount=type=cache,target=/var/lib/apt,sharing=locked \
     && /usr/sbin/update-locale LANG=ja_JP.UTF-8 LANGUAGE="ja_JP:ja" \
     && /bin/bash -c "source /etc/default/locale" \
     && ln -sf /usr/share/zoneinfo/Asia/Tokyo /etc/localtime \
-    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/* \
     && mkdir -p /etc/R
 
 # coder user (passwordless sudo)
@@ -32,31 +35,31 @@ RUN useradd -m -s /bin/bash coder \
 RUN curl -fsSL https://code-server.dev/install.sh | sh
 
 # Quarto CLI
-# rocker/rstudio:4.5.1 と同じバージョンを指定して、rocker公式のインストールスクリプトで導入
-# wget, ca-certicifates は導入済みのため apt の処理はスキップ（行番号は @07c155e 準拠）
+# rocker/rstudio:4.5.2 と同じバージョンを指定して、rocker公式のインストールスクリプトで導入
+# wget, ca-certicifates は導入済みのため apt の処理はスキップ（行番号は @6f25f32 準拠）
 
-ARG PANDOC_VERSION="3.8.2.1" \
-    QUARTO_VERSION="1.7.32"
+ARG PANDOC_VERSION="3.9" \
+    QUARTO_VERSION="1.8.25"
 
-RUN --mount=type=cache,target=/var/lib/apt,sharing=locked \
-    --mount=type=cache,target=/var/cache/apt,sharing=locked \
-    sed -e "16,26d" /rocker_scripts/install_pandoc.sh | bash \
+RUN --mount=type=cache,id=apt-cache-${TARGETARCH},target=/var/cache/apt \
+    sed -e "16,26d" -e "85d" /rocker_scripts/install_pandoc.sh | bash \
     && sed -e "21,31d" /rocker_scripts/install_quarto.sh | bash
 
 # uv (Python manager) & radian
-COPY --from=ghcr.io/astral-sh/uv:0.9.8 /uv /uvx /opt/uv/bin/
+COPY --from=ghcr.io/astral-sh/uv:0.10.9 /uv /uvx /opt/uv/bin/
 
 ENV UV_PYTHON_INSTALL_DIR=/opt/uv/python \
     PATH=/opt/venv/bin:/opt/uv/bin:$PATH
 
-RUN /opt/uv/bin/uv venv --python 3.12.12 /opt/venv \
+RUN /opt/uv/bin/uv venv --python 3.12.13 /opt/venv \
     && chmod -R a+rX /opt \
     && uv pip install radian
 
 # Node.js / npm / pnpm
-# 公式の npm 不要のインストールスクリプトで 2025-10-30 時点の Active LTS = v24系をインストール
-RUN wget -qO- https://raw.githubusercontent.com/tj/n/master/bin/n | bash -s install v24 \
-    && npm install -g pnpm
+# n 公式の npm 不要のインストールスクリプトで Active LTS （2026-03 現在は v24系）をインストール
+# n 自身も改めて入れておく
+RUN wget -qO- https://raw.githubusercontent.com/tj/n/master/bin/n | bash -s install lts_active \
+    && npm install -g n pnpm
 
 # Microsoft Edit
 RUN mkdir -p /opt/msedit/ \
@@ -71,13 +74,10 @@ RUN mkdir -p /opt/msedit/ \
 
 # mokztk/RStudio_docker から流用した setup script
 # 各スクリプトは改行コード LF(UNIX) でないとエラーになる
-COPY my_scripts /my_scripts
+COPY --chmod=755 my_scripts /my_scripts
 
-RUN --mount=type=cache,target=/var/lib/apt,sharing=locked \
-    --mount=type=cache,target=/var/cache/apt,sharing=locked \
-    --mount=type=cache,target=/root/.cache/R,sharing=locked \
-    chmod 775 my_scripts/* \
-    && bash /my_scripts/install_r_packages_pak.sh \
+RUN --mount=type=cache,id=apt-cache-${TARGETARCH},target=/var/cache/apt \
+    bash /my_scripts/install_r_packages_pak.sh \
     && bash /my_scripts/install_notojp.sh
 
 # ユーザー設定
