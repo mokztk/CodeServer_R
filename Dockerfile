@@ -38,7 +38,7 @@ RUN curl -fsSL https://code-server.dev/install.sh | sh
 # rocker/rstudio:4.5.2 と同じバージョンを指定して、rocker公式のインストールスクリプトで導入
 # wget, ca-certicifates は導入済みのため apt の処理はスキップ（行番号は @6f25f32 準拠）
 
-ARF PANDOC_VERSION="3.9" \
+ARG PANDOC_VERSION="3.9" \
     QUARTO_VERSION="1.8.25"
 
 RUN --mount=type=cache,id=apt-cache-${TARGETARCH},target=/var/cache/apt \
