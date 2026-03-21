@@ -24,9 +24,10 @@ function pak_pak() {
 }
 
 # code-server で使うもの
+# languageserver は CRAN@2026-03-10 のものではうまく動かなかったので開発版をインストール
 
 pak_pak \
-    languageserver \
+    REditorSupport/languageserver@13c21ee \
     httpgd
 
 # rocker/tidyverse 相当のパッケージ
