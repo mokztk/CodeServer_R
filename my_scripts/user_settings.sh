@@ -104,4 +104,4 @@ pnpm config set --location=global minimumReleaseAge 10080
 # 安全のため、リリース後1週間以上経ったパッケージのみインストールできるようにする
 
 mkdir -p /home/coder/.config/uv
-echo `exclude-newer = "1 week"` >> /home/coder/.config/uv/uv.toml
+echo 'exclude-newer = "1 week"' >> /home/coder/.config/uv/uv.toml
