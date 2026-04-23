@@ -97,3 +97,10 @@ EOF
 SHELL=/usr/bin/bash pnpm setup
 pnpm config set --location=global minimumReleaseAge 10080
 
+#-------------------------------
+#  uv
+#-------------------------------
+
+# 安全のため、リリース後1週間以上経ったパッケージのみインストールできるようにする
+
+echo `exclude-newer = "1 week"` >> /home/coder/.config/uv/uv.toml
