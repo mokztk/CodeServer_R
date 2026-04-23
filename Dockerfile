@@ -29,8 +29,7 @@ RUN --mount=type=cache,id=apt-cache-${TARGETARCH},target=/var/cache/apt \
 # coder user (passwordless sudo)
 RUN useradd -m -s /bin/bash coder \
  && echo "coder ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/coder \
- && chmod 0440 /etc/sudoers.d/coder \
- && usermod -aG staff coder
+ && chmod 0440 /etc/sudoers.d/coder
 
 # code-server
 RUN curl -fsSL https://code-server.dev/install.sh | sh
@@ -53,9 +52,8 @@ ENV UV_PYTHON_INSTALL_DIR=/opt/uv/python \
     PATH=/opt/venv/bin:/opt/uv/bin:$PATH
 
 RUN /opt/uv/bin/uv venv --python 3.12.13 /opt/venv \
-    && chgrp -R staff /opt/venv \
-    && chmod -R 2775 /opt/venv \
-    && uv pip install radian
+    && uv pip install radian \
+    && chown -R coder:coder /opt/venv
 
 # Node.js / npm / pnpm
 # n 公式の npm 不要のインストールスクリプトで Active LTS （2026-03 現在は v24系）をインストール
@@ -85,9 +83,8 @@ ENV R_LIBS_SITE=/opt/R/packages/4.5 \
 RUN --mount=type=cache,id=apt-cache-${TARGETARCH},target=/var/cache/apt \
     mkdir -p $R_LIBS_SITE \
     && cp -r /usr/local/lib/R/site-library/* $R_LIBS_SITE/ \
-    && chgrp -R staff /opt/R/packages \
-    && chmod -R 2775 /opt/R/packages \
     && bash /my_scripts/install_r_packages_pak.sh \
+    && chown -R coder:coder $R_LIBS_SITE \
     && bash /my_scripts/install_notojp.sh
 
 # ユーザー設定
