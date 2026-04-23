@@ -3,16 +3,6 @@
 # 各アプリのユーザー設定
 
 #-------------------------------
-#  R
-#-------------------------------
-
-# User library
-# R_LIBS_USER に指定されているディレクトリを .libPaths() の先頭にする
-
-Rscript -e 'dir.create(Sys.getenv("R_LIBS_USER"), recursive = TRUE)'
-echo '.libPaths(c(Sys.getenv("R_LIBS_USER"), .Library.site, .Library))' >> /home/coder/.Rprofile
-
-#-------------------------------
 #  code-server
 #-------------------------------
 

@@ -29,7 +29,8 @@ RUN --mount=type=cache,id=apt-cache-${TARGETARCH},target=/var/cache/apt \
 # coder user (passwordless sudo)
 RUN useradd -m -s /bin/bash coder \
  && echo "coder ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/coder \
- && chmod 0440 /etc/sudoers.d/coder
+ && chmod 0440 /etc/sudoers.d/coder \
+ && usermod -aG staff coder
 
 # code-server
 RUN curl -fsSL https://code-server.dev/install.sh | sh
@@ -52,7 +53,8 @@ ENV UV_PYTHON_INSTALL_DIR=/opt/uv/python \
     PATH=/opt/venv/bin:/opt/uv/bin:$PATH
 
 RUN /opt/uv/bin/uv venv --python 3.12.13 /opt/venv \
-    && chmod -R a+rX /opt \
+    && chgrp -R staff /opt/venv \
+    && chmod -R 2775 /opt/venv \
     && uv pip install radian
 
 # Node.js / npm / pnpm
@@ -76,8 +78,16 @@ RUN mkdir -p /opt/msedit/ \
 # 各スクリプトは改行コード LF(UNIX) でないとエラーになる
 COPY --chmod=755 my_scripts /my_scripts
 
+# R の site library を一般ユーザー coder でも書き込みできる場所に移す
+ENV R_LIBS_SITE=/opt/R/packages/4.5 \
+    R_LIBS=/opt/R/packages/4.5:/usr/local/lib/R/library
+
 RUN --mount=type=cache,id=apt-cache-${TARGETARCH},target=/var/cache/apt \
-    bash /my_scripts/install_r_packages_pak.sh \
+    mkdir -p $R_LIBS_SITE \
+    && cp -r /usr/local/lib/R/site-library/* $R_LIBS_SITE/ \
+    && chgrp -R staff /opt/R/packages \
+    && chmod -R 2775 /opt/R/packages \
+    && bash /my_scripts/install_r_packages_pak.sh \
     && bash /my_scripts/install_notojp.sh
 
 # ユーザー設定
