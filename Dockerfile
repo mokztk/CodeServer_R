@@ -52,8 +52,8 @@ ENV UV_PYTHON_INSTALL_DIR=/opt/uv/python \
     PATH=/opt/venv/bin:/opt/uv/bin:$PATH
 
 RUN /opt/uv/bin/uv venv --python 3.12.13 /opt/venv \
-    && chmod -R a+rX /opt \
-    && uv pip install radian
+    && uv pip install radian \
+    && chown -R coder:coder /opt/venv
 
 # Node.js / npm / pnpm
 # n 公式の npm 不要のインストールスクリプトで Active LTS （2026-03 現在は v24系）をインストール
@@ -76,8 +76,15 @@ RUN mkdir -p /opt/msedit/ \
 # 各スクリプトは改行コード LF(UNIX) でないとエラーになる
 COPY --chmod=755 my_scripts /my_scripts
 
+# R の site library を一般ユーザー coder でも書き込みできる場所に移す
+ENV R_LIBS_SITE=/opt/R/packages/4.5 \
+    R_LIBS=/opt/R/packages/4.5:/usr/local/lib/R/library
+
 RUN --mount=type=cache,id=apt-cache-${TARGETARCH},target=/var/cache/apt \
-    bash /my_scripts/install_r_packages_pak.sh \
+    mkdir -p $R_LIBS_SITE \
+    && cp -r /usr/local/lib/R/site-library/* $R_LIBS_SITE/ \
+    && bash /my_scripts/install_r_packages_pak.sh \
+    && chown -R coder:coder $R_LIBS_SITE \
     && bash /my_scripts/install_notojp.sh
 
 # ユーザー設定

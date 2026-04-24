@@ -20,5 +20,6 @@
     "workbench.colorTheme": "Visual Studio Light",
     "remote.autoForwardPortsSource": "hybrid",
     "editor.tabSize": 2,
-    "files.autoSave": "off"
+    "files.autoSave": "off",
+    "terminal.integrated.defaultProfile.linux": "R Terminal"
 }

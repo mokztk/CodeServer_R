@@ -3,16 +3,6 @@
 # 各アプリのユーザー設定
 
 #-------------------------------
-#  R
-#-------------------------------
-
-# User library
-# R_LIBS_USER に指定されているディレクトリを .libPaths() の先頭にする
-
-Rscript -e 'dir.create(Sys.getenv("R_LIBS_USER"), recursive = TRUE)'
-echo '.libPaths(c(Sys.getenv("R_LIBS_USER"), .Library.site, .Library))' >> /home/coder/.Rprofile
-
-#-------------------------------
 #  code-server
 #-------------------------------
 
@@ -107,3 +97,11 @@ EOF
 SHELL=/usr/bin/bash pnpm setup
 pnpm config set --location=global minimumReleaseAge 10080
 
+#-------------------------------
+#  uv
+#-------------------------------
+
+# 安全のため、リリース後1週間以上経ったパッケージのみインストールできるようにする
+
+mkdir -p /home/coder/.config/uv
+echo 'exclude-newer = "1 week"' >> /home/coder/.config/uv/uv.toml
