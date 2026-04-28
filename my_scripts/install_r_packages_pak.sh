@@ -24,15 +24,14 @@ function pak_pak() {
 }
 
 # code-server で使うもの
-# languageserver は CRAN@2026-03-10 のものではうまく動かなかったので開発版をインストール
 
 pak_pak \
-    REditorSupport/languageserver@13c21ee \
+    languageserver \
     httpgd
 
 # rocker/tidyverse 相当のパッケージ
-# 容量の大きな database backend は RSQLite 以外省略（行番号は @5d33fd1 準拠）
-# sed -e 48d -e 52,56d /rocker_scripts/install_tidyverse.sh | bash
+# 容量の大きな database backend は RSQLite 以外省略（行番号は @2b91d04 準拠）
+# sed -e 49d -e 53,57d /rocker_scripts/install_tidyverse.sh | bash
 
 pak_pak \
     tidyverse \
