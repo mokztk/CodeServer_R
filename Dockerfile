@@ -32,7 +32,7 @@ RUN useradd -m -s /bin/bash coder \
  && chmod 0440 /etc/sudoers.d/coder
 
 # code-server
-RUN curl -fsSL https://code-server.dev/install.sh | sh
+RUN curl -fsSL https://code-server.dev/install.sh | sh -s -- --version 4.117.0
 
 # Quarto CLI
 # rocker/rstudio:4.5.3 と同じバージョンを指定して、rocker公式のインストールスクリプトで導入
@@ -46,20 +46,20 @@ RUN --mount=type=cache,id=apt-cache-${TARGETARCH},target=/var/cache/apt \
     && sed -e "21,31d" /rocker_scripts/install_quarto.sh | bash
 
 # uv (Python manager) & radian
-COPY --from=ghcr.io/astral-sh/uv:0.10.9 /uv /uvx /opt/uv/bin/
+COPY --from=ghcr.io/astral-sh/uv:0.11.8 /uv /uvx /opt/uv/bin/
 
 ENV UV_PYTHON_INSTALL_DIR=/opt/uv/python \
     PATH=/opt/venv/bin:/opt/uv/bin:$PATH
 
 RUN /opt/uv/bin/uv venv --python 3.12.13 /opt/venv \
-    && uv pip install radian \
+    && uv pip install radian==0.6.15 \
     && chown -R coder:coder /opt/venv
 
 # Node.js / npm / pnpm
-# n 公式の npm 不要のインストールスクリプトで Active LTS （2026-03 現在は v24系）をインストール
+# n 公式の npm 不要のインストールスクリプトで Active LTS の v24.15.0 をインストール
 # n 自身も改めて入れておく
-RUN wget -qO- https://raw.githubusercontent.com/tj/n/master/bin/n | bash -s install lts_active \
-    && npm install -g n pnpm
+RUN wget -qO- https://raw.githubusercontent.com/tj/n/master/bin/n | bash -s install 24.15.0 \
+    && npm install -g n@10.2.0 npm@11.13.0 pnpm@10.33.2
 
 # Microsoft Edit
 RUN mkdir -p /opt/msedit/ \
