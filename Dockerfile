@@ -12,7 +12,6 @@ ENV DEBIAN_FRONTEND=noninteractive
 ARG CODESERVER_VERSION="4.117.0"
 ARG PANDOC_VERSION="3.9.0.2"
 ARG QUARTO_VERSION="1.9.36"
-ARG UV_VERSION="0.11.8"
 ARG PYTHON_VERSION="3.12.13"
 ARG RADIAN_VERSION="0.6.15"
 ARG NODE_VERSION="24.15.0"
@@ -54,7 +53,7 @@ RUN --mount=type=cache,id=apt-cache-${TARGETARCH},target=/var/cache/apt \
     && sed -e "21,31d" /rocker_scripts/install_quarto.sh | bash
 
 # uv (Python manager) & radian
-COPY --from=ghcr.io/astral-sh/uv:${UV_VERSION} /uv /uvx /opt/uv/bin/
+COPY --from=ghcr.io/astral-sh/uv:0.11.8 /uv /uvx /opt/uv/bin/
 
 ENV UV_PYTHON_INSTALL_DIR=/opt/uv/python \
     PATH=/opt/venv/bin:/opt/uv/bin:$PATH
