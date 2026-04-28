@@ -3,7 +3,7 @@
 ARG BUILDKIT_INLINE_CACHE=1
 ARG TARGETPLATFORM
 
-FROM --platform=$TARGETPLATFORM rocker/r-ver:4.5.2
+FROM --platform=$TARGETPLATFORM rocker/r-ver:4.5.3
 
 ARG TARGETARCH
 ENV DEBIAN_FRONTEND=noninteractive
@@ -35,11 +35,11 @@ RUN useradd -m -s /bin/bash coder \
 RUN curl -fsSL https://code-server.dev/install.sh | sh
 
 # Quarto CLI
-# rocker/rstudio:4.5.2 と同じバージョンを指定して、rocker公式のインストールスクリプトで導入
-# wget, ca-certicifates は導入済みのため apt の処理はスキップ（行番号は @6f25f32 準拠）
+# rocker/rstudio:4.5.3 と同じバージョンを指定して、rocker公式のインストールスクリプトで導入
+# wget, ca-certicifates は導入済みのため apt の処理はスキップ（行番号は @2b91d04 準拠）
 
-ARG PANDOC_VERSION="3.9" \
-    QUARTO_VERSION="1.8.25"
+ARG PANDOC_VERSION="3.9.0.2" \
+    QUARTO_VERSION="1.9.36"
 
 RUN --mount=type=cache,id=apt-cache-${TARGETARCH},target=/var/cache/apt \
     sed -e "16,26d" -e "85d" /rocker_scripts/install_pandoc.sh | bash \
