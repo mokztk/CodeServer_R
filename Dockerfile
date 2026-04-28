@@ -8,6 +8,18 @@ FROM --platform=$TARGETPLATFORM rocker/r-ver:4.5.3
 ARG TARGETARCH
 ENV DEBIAN_FRONTEND=noninteractive
 
+# 各種ツールのバージョン指定
+ARG CODESERVER_VERSION="4.117.0"
+ARG PANDOC_VERSION="3.9.0.2"
+ARG QUARTO_VERSION="1.9.36"
+ARG UV_VERSION="0.11.8"
+ARG PYTHON_VERSION="3.12.13"
+ARG RADIAN_VERSION="0.6.15"
+ARG NODE_VERSION="24.15.0"
+ARG N_VERSION="10.2.0"
+ARG NPM_VERSION="11.13.0"
+ARG PNPM_VERSION="10.33.2"
+
 # 日本語設定と必要なライブラリ（Rパッケージ用は別途スクリプト内で導入）
 # 以降も何度か apt-get を使うので BuildKit のキャッシュマウント機能を使う
 RUN --mount=type=cache,id=apt-cache-${TARGETARCH},target=/var/cache/apt \
@@ -32,34 +44,30 @@ RUN useradd -m -s /bin/bash coder \
  && chmod 0440 /etc/sudoers.d/coder
 
 # code-server
-RUN curl -fsSL https://code-server.dev/install.sh | sh -s -- --version 4.117.0
+RUN curl -fsSL https://code-server.dev/install.sh | sh -s -- --version ${CODESERVER_VERSION}
 
 # Quarto CLI
-# rocker/rstudio:4.5.3 と同じバージョンを指定して、rocker公式のインストールスクリプトで導入
+# rocker/rstudio:4.5.3 と同じバージョンをrocker公式のインストールスクリプトで導入
 # wget, ca-certicifates は導入済みのため apt の処理はスキップ（行番号は @2b91d04 準拠）
-
-ARG PANDOC_VERSION="3.9.0.2" \
-    QUARTO_VERSION="1.9.36"
-
 RUN --mount=type=cache,id=apt-cache-${TARGETARCH},target=/var/cache/apt \
     sed -e "16,26d" -e "85d" /rocker_scripts/install_pandoc.sh | bash \
     && sed -e "21,31d" /rocker_scripts/install_quarto.sh | bash
 
 # uv (Python manager) & radian
-COPY --from=ghcr.io/astral-sh/uv:0.11.8 /uv /uvx /opt/uv/bin/
+COPY --from=ghcr.io/astral-sh/uv:${UV_VERSION} /uv /uvx /opt/uv/bin/
 
 ENV UV_PYTHON_INSTALL_DIR=/opt/uv/python \
     PATH=/opt/venv/bin:/opt/uv/bin:$PATH
 
-RUN /opt/uv/bin/uv venv --python 3.12.13 /opt/venv \
-    && uv pip install radian==0.6.15 \
+RUN /opt/uv/bin/uv venv --python ${PYTHON_VERSION} /opt/venv \
+    && uv pip install radian==${RADIAN_VERSION} \
     && chown -R coder:coder /opt/venv
 
 # Node.js / npm / pnpm
 # n 公式の npm 不要のインストールスクリプトで Active LTS の v24.15.0 をインストール
 # n 自身も改めて入れておく
-RUN wget -qO- https://raw.githubusercontent.com/tj/n/master/bin/n | bash -s install 24.15.0 \
-    && npm install -g n@10.2.0 npm@11.13.0 pnpm@10.33.2
+RUN wget -qO- https://raw.githubusercontent.com/tj/n/master/bin/n | bash -s install ${NODE_VERSION} \
+    && npm install -g n@${N_VERSION} npm@${NPM_VERSION} pnpm@${PNPM_VERSION}
 
 # Microsoft Edit
 RUN mkdir -p /opt/msedit/ \
@@ -77,8 +85,8 @@ RUN mkdir -p /opt/msedit/ \
 COPY --chmod=755 my_scripts /my_scripts
 
 # R の site library を一般ユーザー coder でも書き込みできる場所に移す
-ENV R_LIBS_SITE=/opt/R/packages/4.5 \
-    R_LIBS=/opt/R/packages/4.5:/usr/local/lib/R/library
+ENV R_LIBS_SITE=/opt/R/packages/4.5
+ENV R_LIBS=${R_LIBS_SITE}:/usr/local/lib/R/library
 
 RUN --mount=type=cache,id=apt-cache-${TARGETARCH},target=/var/cache/apt \
     mkdir -p $R_LIBS_SITE \
